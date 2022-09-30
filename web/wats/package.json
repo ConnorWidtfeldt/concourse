@@ -7,7 +7,7 @@
     "color": "^4.2.3",
     "puppeteer": "^14.3.0",
     "tmp-promise": "^3.0.3",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "ava": "^4.3.0"
