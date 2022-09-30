@@ -17,6 +17,14 @@ var (
 		FileMode: &worldReadWrite,
 	}
 
+	loopControlDevice = specs.LinuxDevice{
+		Path:     "/dev/loop-control",
+		Type:     "c",
+		Major:    10,
+		Minor:    237,
+		FileMode: &worldReadWrite,
+	}
+
 	// runc adds a list of devices by default.
 	// The rule below gets appended to that list.
 	// The rules along with some context can be found here:
@@ -27,7 +35,21 @@ var (
 	// https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/cgroup-v1/devices.rst
 	AnyContainerDevices = []specs.LinuxDeviceCgroup{
 		// This allows use of the FUSE filesystem
-		{Access: "rwm", Type: fuseDevice.Type, Major: intRef(fuseDevice.Major), Minor: intRef(fuseDevice.Minor), Allow: true}, // /dev/fuse
+		{ // /dev/fuse
+			Access: "rwm",
+			Type:   fuseDevice.Type,
+			Major:  intRef(fuseDevice.Major),
+			Minor:  intRef(fuseDevice.Minor),
+			Allow:  true,
+		},
+		// This allows the use of devices
+		{ // /dev/loop-control
+			Access: "rwm",
+			Type:   loopControlDevice.Type,
+			Major:  intRef(loopControlDevice.Major),
+			Minor:  intRef(loopControlDevice.Minor),
+			Allow:  true,
+		},
 	}
 )
 
@@ -39,5 +61,6 @@ func Devices(privileged bool) []specs.LinuxDevice {
 	}
 	return []specs.LinuxDevice{
 		fuseDevice,
+		loopControlDevice,
 	}
 }
